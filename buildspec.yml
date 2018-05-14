@@ -1,0 +1,32 @@
+version: 0.1
+
+phases:
+
+  install:
+    commands:
+      - go get -u github.com/golang/dep/cmd/dep
+      - go get -u github.com/golang/lint/golint
+      - dep ensure
+  pre_build:
+    commands:
+
+      # Ensure code passes all lint tests
+      - golint -set_exit_status
+
+      # Run all tests included with our application
+      - go test ./src/
+
+  build:
+    commands:
+
+      # Build our application
+      - go build -o questionnaireApp ./src/
+
+artifacts:
+  files:
+    - app
+    - appspec.yml
+    - buildspec.yml
+    - config/*
+    - codedeploy/*
+    - cloudformation/*

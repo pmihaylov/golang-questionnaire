@@ -404,6 +404,10 @@ vendor
 *.out
 <<<<<<< HEAD
 
+*.exe
+*.test
+*.prof
+
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 =======
@@ -431,3 +435,4 @@ tags
 
 ### Project
 pdf
+questionnaireApp
