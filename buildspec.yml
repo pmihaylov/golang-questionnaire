@@ -14,17 +14,17 @@ phases:
       - golint -set_exit_status
 
       # Run all tests included with our application
-      - go test ./src/
+      - go test
 
   build:
     commands:
 
       # Build our application
-      - go build -o questionnaireApp ./src/
+      - go build -o questionnaireApp
 
 artifacts:
   files:
-    - app
+    - questionnaireApp
     - appspec.yml
     - buildspec.yml
     - config/*
