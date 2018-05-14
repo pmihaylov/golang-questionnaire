@@ -9,21 +9,22 @@ phases:
   install:
     commands:
       - echo Install in `pwd`
+
       - go get -u github.com/golang/dep/cmd/dep
       - go get -u github.com/golang/lint/golint
 
-      - echo CODEBUILD_SRC_DIR - $CODEBUILD_SRC_DIR
       - echo GOPATH - $GOPATH
+      - echo CODEBUILD_SRC_DIR - $CODEBUILD_SRC_DIR
 
       - echo Create dir in GOPATH for sources
-      - mkdir -p ${GOPATH}/src/${PACKAGE}
+      - mkdir -p ${CODEBUILD_SRC_DIR}/${PACKAGE}
 
       - echo Copy source files into GOPATH
-      - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
-      - cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+      - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${CODEBUILD_SRC_DIR}/${PACKAGE}
+      - cp -a ${CODEBUILD_SRC_DIR}/.  ${CODEBUILD_SRC_DIR}/${PACKAGE}
 
       - echo Install dependencies
-      - cd ${GOPATH}/src/${PACKAGE} && dep ensure
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && dep ensure
 
   pre_build:
     commands:
@@ -32,13 +33,13 @@ phases:
       - golint -set_exit_status
 
       # Run all tests included with our application
-      - cd ${GOPATH}/src/${PACKAGE} && go test
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go test
 
   build:
     commands:
       # Build our application
       - echo Build in `pwd`
-      - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
 
 artifacts:
   files:
