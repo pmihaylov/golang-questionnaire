@@ -1,12 +1,15 @@
 package app
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/spf13/viper"
 	"golang-questionnaire/app/db"
 	"golang-questionnaire/app/routes"
 	"html/template"
 	"io"
+	"path"
 )
 
 type Template struct {
@@ -18,6 +21,17 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 var Server *echo.Echo
+
+func Config() {
+	viper.SetConfigType("json")
+	viper.SetConfigName("app-config")
+	viper.AddConfigPath(path.Join(".", "app", "config"))
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+}
 
 func Init() {
 	db.Init()
