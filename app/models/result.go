@@ -7,7 +7,7 @@ import (
 
 type Result struct {
 	gorm.Model
-	ResultId  uuid.UUID  `json:"resultId" gorm:"type:varchar(36)"`
+	ResultId  uuid.UUID  `json:"resultId"`
 	Title  string  `json:"title"`
 	Questions []Question `json:"questions" gorm:"-"`
 }

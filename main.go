@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-standalone/app"
+	"golang-questionnaire/app"
 )
 
 func main() {

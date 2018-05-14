@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/labstack/echo"
-	"go-standalone/app/db"
-	"go-standalone/app/models"
+	"golang-questionnaire/app/db"
+	"golang-questionnaire/app/models"
 	"net/http"
 	"path"
 )
