@@ -10,5 +10,15 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+*.exe
+*.test
+*.prof
+
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+# Ignore vendor path
+vendor/
+
+# Ignore application file
+questionnaireApp
