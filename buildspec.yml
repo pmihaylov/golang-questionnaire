@@ -8,7 +8,7 @@ phases:
   install:
     commands:
       - go get -u github.com/golang/lint/golint
-      - go get ./...
+      - go get -u ./...
 
   pre_build:
     commands:
