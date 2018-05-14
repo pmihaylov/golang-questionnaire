@@ -14,6 +14,18 @@
   version = "0.2"
 
 [[projects]]
+  name = "github.com/gorilla/context"
+  packages = ["."]
+  revision = "1ea25387ff6f684839d82767c1733ff4d4d15d0a"
+  version = "v1.1"
+
+[[projects]]
+  name = "github.com/gorilla/mux"
+  packages = ["."]
+  revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
+  version = "v1.6.2"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
@@ -91,17 +103,17 @@
     "acme",
     "acme/autocert"
   ]
-  revision = "2d027ae1dddd4694d54f7a8b6cbe78dca8720226"
+  revision = "94e3fad7f1b4eed4ec147751ad6b4c4d33f00611"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7dfd1290c7917b7ba22824b9d24954ab3002fe24"
+  revision = "d0faeb539838e250bd0a9db4182d48d4a1915181"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ad1d32389b749d1188815f98723475e72cfacf134f8d393f61938ce12e574b64"
+  inputs-digest = "d1c497b7d8ea6405ff9155fca9bff1f37385327d7c8d0eb2a99fcdbd9d37065c"
   solver-name = "gps-cdcl"
   solver-version = 1
