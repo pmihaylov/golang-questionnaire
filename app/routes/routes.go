@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/labstack/echo"
 	"net/http"
-	"golang-questionnaire/app/controllers/results"
+	"github.com/pmihaylov/golang-questionnaire/app/controllers/results"
 )
 
 func Init(server *echo.Echo) {

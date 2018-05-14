@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/labstack/echo"
-	"golang-questionnaire/app/db"
-	"golang-questionnaire/app/models"
+	"github.com/pmihaylov/golang-questionnaire/app/db"
+	"github.com/pmihaylov/golang-questionnaire/app/models"
 	"net/http"
 	"path"
 )

@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"golang-questionnaire/app/models"
+	"github.com/pmihaylov/golang-questionnaire/app/models"
 )
 
 /**
