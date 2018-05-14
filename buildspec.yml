@@ -1,26 +1,44 @@
-version: 0.1
+version: 0.2
+
+env:
+  variables:
+    PACKAGE: "golang-questionnaire"
 
 phases:
 
   install:
     commands:
-      - echo $GOPATH
+      - echo Install in `pwd`
       - go get -u github.com/golang/dep/cmd/dep
       - go get -u github.com/golang/lint/golint
-      - dep ensure
+
+      - echo CODEBUILD_SRC_DIR - $CODEBUILD_SRC_DIR
+      - echo GOPATH - $GOPATH
+
+      - echo Create dir in GOPATH for sources
+      - mkdir -p ${GOPATH}/src/${PACKAGE}
+
+      - echo Copy source files into GOPATH
+      - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+      - cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+
+      - echo Install dependencies
+      - cd ${GOPATH}/src/${PACKAGE} && dep ensure
+
   pre_build:
     commands:
+      - echo Prebuild in `pwd`
       # Ensure code passes all lint tests
       - golint -set_exit_status
 
       # Run all tests included with our application
-      - go test
+      - cd ${GOPATH}/src/${PACKAGE} && go test
 
   build:
     commands:
-
       # Build our application
-      - go build -o questionnaireApp
+      - echo Build in `pwd`
+      - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
 
 artifacts:
   files:
