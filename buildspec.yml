@@ -5,7 +5,6 @@ env:
     PACKAGE: "golang-questionnaire"
 
 phases:
-
   install:
     commands:
       - go get -u github.com/golang/lint/golint
