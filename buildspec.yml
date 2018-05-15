@@ -28,8 +28,12 @@ phases:
     commands:
       # Build our application
       - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
+      
       - echo List directory structure in ${CODEBUILD_SRC_DIR}/${PACKAGE}
       - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && ls -al
+
+      - echo List directory structure in ${CODEBUILD_SRC_DIR}
+      - cd ${CODEBUILD_SRC_DIR} && ls -al
 
 artifacts:
   files:
