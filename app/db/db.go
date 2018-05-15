@@ -7,18 +7,19 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"golang-questionnaire/app/models"
+	"github.com/labstack/echo"
 )
 
 var DB *gorm.DB
 
-func Init() {
-
+func Init(server *echo.Echo) {
 	connectionString := getConnectionString()
 
 	var err error
 	DB, err = gorm.Open("postgres", connectionString)
+
 	if err != nil {
-		fmt.Errorf("failed to connect database: %v", err)
+		server.Logger.Fatalf("failed to connect database: %v", err)
 	}
 
 	// Migrate the schema

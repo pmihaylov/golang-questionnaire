@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/spf13/viper"
@@ -22,26 +21,24 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 
 var Server *echo.Echo
 
-func Config() {
+func readConfig() {
 	viper.SetConfigType("json")
 	viper.SetConfigName("app-config")
 	viper.AddConfigPath(path.Join(".", "app", "config"))
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		Server.Logger.Fatalf("Fatal error config file: %s \n", err)
 	}
 }
 
 func Init() {
-	db.Init()
+	db.Init(Server)
 	defer db.DB.Close()
 
 	templateRenderer := &Template{
 		templates: template.Must(template.ParseGlob(path.Join("public", "views", "*.html"))),
 	}
-
-	Server = echo.New()
 
 	Server.Renderer = templateRenderer
 
@@ -52,4 +49,9 @@ func Init() {
 	routes.Init(Server)
 
 	Server.Logger.Fatal(Server.Start(":8080"))
+}
+
+func init() {
+	Server = echo.New()
+	readConfig()
 }

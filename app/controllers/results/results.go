@@ -33,7 +33,6 @@ func SubmitResults(c echo.Context) error {
 
 func storeResults(res *models.Result) error {
 	db.DB.Create(res)
-
 	return nil
 }
 
