@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: .
-    destination: /opt/questionnaire
+    destination: /opt/golang-questionnaire
 hooks:
   BeforeInstall:
     - location: codedeploy/BeforeInstall.sh

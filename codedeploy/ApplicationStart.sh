@@ -1,17 +1,13 @@
 #!/bin/bash
-echo Active directory
-pwd
-ls -al
-
 echo opt directory
 cd /opt
 ls -al
 
-echo questionnaire directory
-#cd /opt/questionnaire
-#ls -al
+echo /opt/golang-questionnaire directory structure
+cd /opt/golang-questionnaire
+ls -al
 
-#/opt/questionnaire/questionnaireApp &
+#/opt/golang-questionnaire/questionnaireApp &
 
 #ps aux
 
