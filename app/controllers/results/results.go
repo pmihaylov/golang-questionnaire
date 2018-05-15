@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/labstack/echo"
-	"io/ioutil"
 	"os"
 )
 
@@ -67,26 +66,27 @@ func ViewResult(c echo.Context) error {
 
 	pdfPath := path.Join(".", "pdf")
 
-	if _, err = ioutil.ReadDir(pdfPath); err != nil {
+	if _, err := os.Stat(pdfPath); os.IsNotExist(err) {
 		os.Mkdir(pdfPath, 755)
 	}
 
-	fileName := fmt.Sprintf("results-%s.pdf", id)
-	filePath := path.Join(".", "pdf", fileName)
-	// defer os.Remove(fileName)
+	pdfName := fmt.Sprintf("results-%s.pdf", id)
+	pdfFilePath := path.Join(pdfPath, pdfName)
 
-	pdf := gofpdf.New("P", "mm", "A4", "")
-	pdf.AddPage()
-	pdf.SetLeftMargin(45)
-	pdf.SetFontSize(14)
-	_, lineHt := pdf.GetFontSize()
-	html := pdf.HTMLBasicNew()
-	html.Write(lineHt, buf.String())
+	if _, err := os.Stat(pdfFilePath); os.IsNotExist(err) {
+		pdf := gofpdf.New("P", "mm", "A4", "")
+		pdf.AddPage()
+		pdf.SetLeftMargin(45)
+		pdf.SetFontSize(14)
+		_, lineHt := pdf.GetFontSize()
+		html := pdf.HTMLBasicNew()
+		html.Write(lineHt, buf.String())
 
-	err = pdf.OutputFileAndClose(filePath)
-	if err != nil {
-		c.Logger().Errorf("Error generating pdf for the result %v: %v", id, err)
+		err = pdf.OutputFileAndClose(pdfFilePath)
+		if err != nil {
+			c.Logger().Errorf("Error generating pdf for the result %v: %v", id, err)
+		}
 	}
 
-	return c.Attachment(pdfPath, fileName)
+	return c.Attachment(pdfFilePath, pdfName)
 }
