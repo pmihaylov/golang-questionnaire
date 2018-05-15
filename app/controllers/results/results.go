@@ -11,6 +11,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/labstack/echo"
+	"io/ioutil"
+	"os"
 )
 
 func SubmitResults(c echo.Context) error {
@@ -63,6 +65,12 @@ func ViewResult(c echo.Context) error {
 		c.Logger().Errorf("Error rendering the result %v", id)
 	}
 
+	pdfPath := path.Join(".", "pdf")
+
+	if _, err = ioutil.ReadDir(pdfPath); err != nil {
+		os.Mkdir(pdfPath, 755)
+	}
+
 	fileName := fmt.Sprintf("results-%s.pdf", id)
 	filePath := path.Join(".", "pdf", fileName)
 	// defer os.Remove(fileName)
@@ -80,5 +88,5 @@ func ViewResult(c echo.Context) error {
 		c.Logger().Errorf("Error generating pdf for the result %v: %v", id, err)
 	}
 
-	return c.Attachment(filePath, fileName)
+	return c.Attachment(pdfPath, fileName)
 }
