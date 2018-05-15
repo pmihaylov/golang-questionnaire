@@ -3,8 +3,8 @@ package app
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/pmihaylov/golang-questionnaire/app/db"
-	"github.com/pmihaylov/golang-questionnaire/app/routes"
+	"golang-questionnaire/app/db"
+	"golang-questionnaire/app/routes"
 	"html/template"
 	"io"
 )

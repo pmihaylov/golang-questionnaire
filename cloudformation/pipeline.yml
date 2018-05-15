@@ -130,7 +130,7 @@ Resources:
                                 Capabilities: CAPABILITY_NAMED_IAM
                                 StackName: !Sub ${ApplicationName}-staging
                                 TemplatePath: Built::cloudformation/infrastructure.yml
-                                TemplateConfiguration: Built::config/staging.conf
+                                TemplateConfiguration: Built::stageconfig/staging.conf
                                 ParameterOverrides: !Sub |
                                     {
                                         "ApplicationName": "${ApplicationName}",
@@ -180,7 +180,7 @@ Resources:
                                 Capabilities: CAPABILITY_NAMED_IAM
                                 StackName: !Sub ${ApplicationName}-production
                                 TemplatePath: Built::cloudformation/infrastructure.yml
-                                TemplateConfiguration: Built::config/production.conf
+                                TemplateConfiguration: Built::stageconfig/production.conf
                                 ParameterOverrides: !Sub |
                                     {
                                         "ApplicationName": "${ApplicationName}",

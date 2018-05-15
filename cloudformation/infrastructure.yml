@@ -20,7 +20,7 @@ Parameters:
     ArtifactS3Bucket:
         Type: String
 
-    # All parameters below can be overridden on a per environment basis in config/*
+    # All parameters below can be overridden on a per environment basis in stageconfig/*
 
     InstanceType:
         Description: The instance type to deploy to
