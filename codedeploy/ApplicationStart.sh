@@ -1,14 +1,8 @@
 #!/bin/bash
-echo opt directory
-cd /opt
-ls -al
+#/opt/golang-questionnaire/questionnaireApp > /dev/null 2> /dev/null < /dev/null &
 
-echo /opt/golang-questionnaire directory structure
-cd /opt/golang-questionnaire
-ls -al
+/opt/golang-questionnaire/questionnaireApp &
 
-#/opt/golang-questionnaire/questionnaireApp &
-
-#ps aux
+ps aux
 
 exit 1
