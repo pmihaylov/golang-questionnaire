@@ -8,11 +8,11 @@ cd /opt
 ls -al
 
 echo questionnaire directory
-cd /opt/questionnaire
-ls -al
+#cd /opt/questionnaire
+#ls -al
 
-/opt/questionnaire/questionnaireApp &
+#/opt/questionnaire/questionnaireApp &
 
-ps aux
+#ps aux
 
 exit 1
