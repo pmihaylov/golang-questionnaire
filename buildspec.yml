@@ -38,6 +38,7 @@ phases:
 artifacts:
   files:
     - questionnaireApp
+    - public/*
     - appspec.yml
     - buildspec.yml
     - stageconfig/*
