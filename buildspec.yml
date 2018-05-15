@@ -11,7 +11,7 @@ phases:
       - go get -u github.com/golang/dep/cmd/dep
       # Ugly hack to move GoLang code to project directory
       - mkdir -p ${CODEBUILD_SRC_DIR}/${PACKAGE}
-      - cp -r `ls | grep -Ev '${PACKAGE}|*.yml|cloudformation|codedeploy|stageconfig'` ${CODEBUILD_SRC_DIR}/${PACKAGE}
+      - cp -r `ls | grep -Ev '*.yml|cloudformation|codedeploy|stageconfig' | grep -v ${PACKAGE}` ${CODEBUILD_SRC_DIR}/${PACKAGE}
 
   pre_build:
     commands:
