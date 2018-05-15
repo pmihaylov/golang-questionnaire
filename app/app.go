@@ -1,12 +1,13 @@
 package app
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 	"golang-questionnaire/app/db"
 	"golang-questionnaire/app/routes"
 	"html/template"
 	"io"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 type Template struct {
@@ -37,5 +38,5 @@ func Init() {
 
 	routes.Init(Server)
 
-	Server.Logger.Fatal(Server.Start(":8080"))
+	Server.Logger.Fatal(Server.Start("localhost:8080"))
 }
