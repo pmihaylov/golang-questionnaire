@@ -4,8 +4,8 @@ files:
   - source: /questionnaireApp
     destination: /opt
   - source: /public
-    destination: /opt
-    
+    destination: /opt/public
+
 hooks:
   BeforeInstall:
     - location: codedeploy/BeforeInstall.sh
