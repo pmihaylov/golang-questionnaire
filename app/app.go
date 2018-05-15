@@ -48,7 +48,7 @@ func Init() {
 
 	routes.Init(Server)
 
-	Server.Logger.Fatal(Server.Start(":8080"))
+	Server.Logger.Fatal(Server.Start(":80"))
 }
 
 func init() {
