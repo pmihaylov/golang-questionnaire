@@ -402,8 +402,6 @@ vendor
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-<<<<<<< HEAD
-
 *.exe
 *.test
 *.prof
@@ -427,11 +425,7 @@ Session.vim
 # Auto-generated tag files
 tags
 ### VisualStudioCode template
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode
 
 ### Project
 pdf
