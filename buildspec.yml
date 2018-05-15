@@ -27,11 +27,13 @@ phases:
   build:
     commands:
       # Build our application
-      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/app
+      - echo List directory structure
+      - ls -al
 
 artifacts:
   files:
-    - questionnaireApp
+    - app
     - appspec.yml
     - buildspec.yml
     - stageconfig/*

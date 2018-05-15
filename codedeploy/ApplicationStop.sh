@@ -1,3 +1,3 @@
 #!/bin/bash
-killall questionnaireApp
+killall app
 exit 0

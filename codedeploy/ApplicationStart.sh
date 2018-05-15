@@ -1,2 +1,2 @@
 #!/bin/bash
-/opt/questionnaireApp > /dev/null 2> /dev/null < /dev/null &
+/opt/app > /dev/null 2> /dev/null < /dev/null &

@@ -235,7 +235,7 @@ Resources:
         Properties:
             Name: !Sub ${ApplicationName}-${EnvironmentName}
             VpcId: !Ref VPC
-            Port: 8080
+            Port: 8000
             Protocol: HTTP
 
     ###########################################

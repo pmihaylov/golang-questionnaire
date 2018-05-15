@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /questionnaireApp
+  - source: /app
     destination: /opt
 hooks:
   BeforeInstall:
