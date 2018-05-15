@@ -226,8 +226,8 @@ Resources:
                   Value: true
                 - Key: routing.http2.enabled
                   Value: true
-                - Key: idle_timeout.timeout_seconds
-                  Value: 60
+                #- Key: idle_timeout.timeout_seconds
+                #  Value: 60
             Subnets:
                 - !Ref PublicSubnet1
                 - !Ref PublicSubnet2
