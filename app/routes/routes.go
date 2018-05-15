@@ -15,6 +15,8 @@ func Init(server *echo.Echo) {
 	})
 
 	// Results
-	server.GET("/result/:id", results.ViewResult)
 	server.POST("/submit", results.SubmitResults)
+
+	server.GET("/result/:id", results.ViewResult)
+	server.GET("/pdf/:id", results.GetResultsPdf)
 }
