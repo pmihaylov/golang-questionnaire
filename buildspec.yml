@@ -40,7 +40,7 @@ artifacts:
     - questionnaireApp
     - appspec.yml
     - buildspec.yml
-    - public/*
+    - public/**
     - stageconfig/*
     - codedeploy/*
     - cloudformation/*
