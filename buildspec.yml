@@ -38,9 +38,9 @@ phases:
 artifacts:
   files:
     - questionnaireApp
-    - public/*
     - appspec.yml
     - buildspec.yml
+    - public/*
     - stageconfig/*
     - codedeploy/*
     - cloudformation/*

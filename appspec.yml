@@ -1,11 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: /questionnaireApp
-    destination: /opt
-  - source: /public
-    destination: /opt/public
-
+  - source: .
+    destination: /opt/questionnaire
 hooks:
   BeforeInstall:
     - location: codedeploy/BeforeInstall.sh

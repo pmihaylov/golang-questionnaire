@@ -1,7 +1,17 @@
 #!/bin/bash
-ls -al /opt
+echo Active directory
+pwd
+ls -al
 
-/opt/questionnaireApp &
+echo opt directory
+cd /opt
+ls -al
+
+echo questionnaire directory
+cd /opt/questionnaire
+ls -al
+
+/opt/questionnaire/questionnaireApp &
 
 ps aux
 
