@@ -10,16 +10,11 @@
 *.so
 *.dylib
 
-# Output of Go the test files
-*.test
-
-=======
 ### Intellij template
 .DS_Store
 .idea
 .idea_modules/
 
-=======
 ### Vim template
 # Swap
 [._]*.s[a-v][a-z]
@@ -37,18 +32,15 @@ Session.vim
 # Auto-generated tag files
 tags
 
-=======
 ### VisualStudioCode template
 .vscode
 
-=======
 ### Project Template
 pdf
 questionnaireApp
 app/config
 golang-questionnaire/
 
-======
 ### Vendors template
 # Vendor directories
 vendor/

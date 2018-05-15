@@ -38,7 +38,7 @@ func Init() {
 	defer db.DB.Close()
 
 	templateRenderer := &Template{
-		templates: template.Must(template.ParseGlob("public/views/*.html")),
+		templates: template.Must(template.ParseGlob(path.Join("public", "views", "*.html"))),
 	}
 
 	Server = echo.New()

@@ -13,9 +13,25 @@ var DB *gorm.DB
 
 func Init() {
 
-	dbConf := viper.GetStringMapString("db.postgres")
+	connectionString := getConnectionString()
 
-	connectionString := fmt.Sprintf(
+	var err error
+	DB, err = gorm.Open("postgres", connectionString)
+	if err != nil {
+		fmt.Errorf("failed to connect database: %v", err)
+	}
+
+	// Migrate the schema
+	DB.AutoMigrate(
+		&models.Result{},
+		&models.Question{},
+	)
+}
+
+func getConnectionString() (connectionString string) {
+	dbConf := viper.GetStringMapString("db.postgresIreland")
+
+	connectionString = fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s",
 		dbConf["host"],
 		dbConf["port"],
@@ -24,15 +40,5 @@ func Init() {
 		dbConf["password"],
 	)
 
-	var err error
-	DB, err = gorm.Open("postgres", connectionString)
-	if err != nil {
-		panic("Failed to connect database")
-	}
-
-	// Migrate the schema
-	DB.AutoMigrate(
-		&models.Result{},
-		&models.Question{},
-	)
+	return
 }
