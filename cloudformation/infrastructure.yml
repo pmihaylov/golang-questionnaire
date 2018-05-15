@@ -219,7 +219,7 @@ Resources:
             Type: application
             IpAddressType: ipv4
             Scheme: internet-facing
-            Attributes:
+            LoadBalancerAttributes:
                 - Key: access_logs.s3.enabled
                   Value: false
                 - Key: load_balancing.cross_zone.enabled
