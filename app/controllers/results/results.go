@@ -3,13 +3,14 @@ package results
 import (
 	"bytes"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/jung-kurt/gofpdf"
-	"github.com/labstack/echo"
 	"golang-questionnaire/app/db"
 	"golang-questionnaire/app/models"
 	"net/http"
 	"path"
+
+	"github.com/google/uuid"
+	"github.com/jung-kurt/gofpdf"
+	"github.com/labstack/echo"
 )
 
 func SubmitResults(c echo.Context) error {

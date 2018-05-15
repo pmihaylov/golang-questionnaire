@@ -1,32 +1,39 @@
-version: 0.1
+version: 0.2
+
+env:
+  variables:
+    PACKAGE: "golang-questionnaire"
 
 phases:
-
   install:
     commands:
-      - go get -u github.com/golang/dep/cmd/dep
       - go get -u github.com/golang/lint/golint
-      - dep ensure
+      - go get -u github.com/golang/dep/cmd/dep
+      # Ugly hack to move GoLang code to project directory
+      - mkdir -p ${CODEBUILD_SRC_DIR}/${PACKAGE}
+      - cp -r `ls | grep -Ev '*.yml|cloudformation|codedeploy|stageconfig' | grep -v ${PACKAGE}` ${CODEBUILD_SRC_DIR}/${PACKAGE}
+
   pre_build:
     commands:
+      # Install dependencies
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && dep ensure
 
       # Ensure code passes all lint tests
       - golint -set_exit_status
 
       # Run all tests included with our application
-      - go test
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go test
 
   build:
     commands:
-
       # Build our application
-      - go build -o questionnaireApp
+      - cd ${CODEBUILD_SRC_DIR}/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/questionnaireApp
 
 artifacts:
   files:
     - questionnaireApp
     - appspec.yml
     - buildspec.yml
-    - config/*
+    - stageconfig/*
     - codedeploy/*
     - cloudformation/*
