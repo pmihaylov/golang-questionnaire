@@ -308,4 +308,4 @@ Outputs:
 
     WebsiteURL:
         Description: Webserver URL
-        Value: !Sub http://${EC2Instance.DNSName}
+        Value: !Sub http://${EC2Instance.PublicIp}
