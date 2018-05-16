@@ -1,14 +1,16 @@
 package app
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"github.com/spf13/viper"
-	"golang-questionnaire/app/db"
-	"golang-questionnaire/app/routes"
 	"html/template"
 	"io"
 	"path"
+
+	"golang-questionnaire/app/db"
+	"golang-questionnaire/app/routes"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+	"github.com/spf13/viper"
 )
 
 type Template struct {

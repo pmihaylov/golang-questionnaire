@@ -5,9 +5,9 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"fmt"
+	"github.com/labstack/echo"
 	"github.com/spf13/viper"
 	"golang-questionnaire/app/models"
-	"github.com/labstack/echo"
 )
 
 var DB *gorm.DB

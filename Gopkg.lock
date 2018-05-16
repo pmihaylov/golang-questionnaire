@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/SebastiaanKlippert/go-wkhtmltopdf"
+  packages = ["."]
+  revision = "bd22435378c6da849eaabeb09fd5bf77748bd554"
+  version = "v1.2.0"
+
+[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
@@ -199,6 +205,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "418d4789a026e67fc46eef3c642323bc2a5531e3e8fdb46169c53409601357fc"
+  inputs-digest = "ecd66c5e9f90882823d5184ab7c774d4b0f026a1cd5002ae577a1c9bdcd73a21"
   solver-name = "gps-cdcl"
   solver-version = 1
