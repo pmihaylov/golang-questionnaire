@@ -101,7 +101,7 @@ func generateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	// Create new PDF generator
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	// Add one page from an URL
@@ -110,13 +110,13 @@ func generateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	// Create PDF document in internal buffer
 	err = pdfg.Create()
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	// Write buffer contents to file on disk
 	err = pdfg.WriteFile(pdfFilePath)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 }
 
