@@ -20,6 +20,9 @@ Parameters:
     KeyName:
         Type: String
 
+    SSHLocation:
+        Type: String
+
     # All parameters below can be overridden on a per environment basis in stageconfig/*
 
     InstanceType:
@@ -305,4 +308,4 @@ Outputs:
 
     WebsiteURL:
         Description: Webserver URL
-        Value: !Sub http://${LoadBalancer.DNSName}
+        Value: !Sub http://${EC2Instance.DNSName}
