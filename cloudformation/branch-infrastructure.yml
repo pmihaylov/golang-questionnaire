@@ -276,7 +276,7 @@ Resources:
         DependsOn: InternetGatewayAttachment
         Properties:
             Domain: vpc
-            InstanceId: EC2Instance
+            InstanceId: !Ref EC2Instance
 
     NatGateway1:
         Type: AWS::EC2::NatGateway
