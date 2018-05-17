@@ -67,6 +67,8 @@ Metadata:
                 default: Application Name
             ArtifactS3Bucket:
                 default: CodePipeline S3 Bucket
+            KeyName:
+                default: Amazon EC2 Key Pair
             GitHubRepository:
                 default: Repository Name
             GitHubUser:

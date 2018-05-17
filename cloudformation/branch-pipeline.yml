@@ -147,7 +147,7 @@ Resources:
                                 Version: 1
                                 Provider: CloudFormation
                             Configuration:
-                                ActionMode: REPLACE_ON_FAILURE
+                                ActionMode: CREATE_UPDATE
                                 RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
                                 Capabilities: CAPABILITY_NAMED_IAM
                                 StackName: !Sub ${ApplicationName}-deployment
