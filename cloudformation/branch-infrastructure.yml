@@ -127,7 +127,7 @@ Resources:
             InstanceType: !Ref InstanceType
             IamInstanceProfile: !Ref InstanceProfile
             KeyName: !Ref KeyName
-            SecurityGroups:
+            SecurityGroupIds:
                 - !Ref ApplicationSecurityGroup
             Tags:
                 - Key: Name
