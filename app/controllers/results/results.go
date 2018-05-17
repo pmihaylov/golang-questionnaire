@@ -62,7 +62,7 @@ func generatePdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	generateWkhtmlPdf(c, res, pdfFilePath)
 
 	elapsed := time.Since(start)
-	c.Echo().Logger.Printf("Generating PDF took %s", elapsed)
+	c.Echo().Logger.Printf("PDF generation took %s", elapsed)
 }
 
 func generateFpdf(c echo.Context, res *models.Result, pdfFilePath string) {

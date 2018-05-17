@@ -1,0 +1,6 @@
+vendor/
+.idea/
+pdf/
+codedeploy/
+cloudformation/
+stageconfig/
