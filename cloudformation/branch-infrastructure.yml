@@ -202,7 +202,7 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${ApplicationName}-${EnvironmentName}-ApplicationServer
-                  
+
     ###########################################
     # IAM
     ###########################################
@@ -308,10 +308,6 @@ Resources:
             RouteTableId: !Ref PublicRouteTable
             SubnetId: !Ref PublicSubnet
 Outputs:
-    LoadBalancerURL:
-        Description: Load Balancer URL
-        Value: !Sub http://${LoadBalancer.DNSName}
-
     WebServerURL:
         Description: Web Server URL
         Value: !Sub http://${EC2Instance.PublicDnsName}
