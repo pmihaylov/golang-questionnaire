@@ -129,6 +129,7 @@ Resources:
             KeyName: !Ref KeyName
             SecurityGroupIds:
                 - !Ref ApplicationSecurityGroup
+            SubnetId: !Ref PublicSubnet
             Tags:
                 - Key: Name
                   Value: !Sub ${ApplicationName}-${EnvironmentName}
