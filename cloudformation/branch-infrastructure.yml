@@ -175,6 +175,11 @@ Resources:
             ApplicationName:
                 Fn::ImportValue:
                     !Sub CodeDeployApplication-${ApplicationName}
+            Ec2TagFilters:
+                - Key: Name
+                  Value: !Sub ${ApplicationName}-${EnvironmentName}
+                  Type: KEY_AND_VALUE
+
 
     ###########################################
     # Security Groups
