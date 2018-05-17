@@ -3,8 +3,7 @@ Description: >
     This CloudFormation template will deploy a full CI/CD pipeline for Go
     development. It includes building with AWS CodeBuild, and infrastructure
     deployment via AWS CloudFormation. It will create an AWS CodePipeline for
-    orchastrating builds, testing and deployments to beta and production
-    environments.
+    orchastrating builds, testing and deployment to environment.
 
 Parameters:
     ApplicationName:

@@ -1,7 +1,7 @@
 Description: >
 
     Infrastructure for a Go Application.
-    This template will deploy an EC2 instances with the CodeDeploy
+    This template will deploy an EC2 instance with the CodeDeploy
     agent installed and ready for application deployments.
 
 Parameters:
@@ -161,52 +161,6 @@ Resources:
                         Fn::FindInMap: [ CodeDeployInstallerBuckets, !Ref 'AWS::Region', Bucket]
 
     ###########################################
-    # Load Balancer
-    ###########################################
-
-    LoadBalancer:
-        Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-        Properties:
-            Name: !Sub ${ApplicationName}-${EnvironmentName}
-            Type: application
-            IpAddressType: ipv4
-            Scheme: internet-facing
-            LoadBalancerAttributes:
-                - Key: access_logs.s3.enabled
-                  Value: false
-                - Key: routing.http2.enabled
-                  Value: true
-                - Key: idle_timeout.timeout_seconds
-                  Value: 60
-                 # - Key: load_balancing.cross_zone.enabled
-                 #   Value: true
-            Subnets:
-                - !Ref PublicSubnet
-            SecurityGroups:
-                - !Ref LoadBalancerSecurityGroup
-            Tags:
-                - Key: Name
-                  Value: !Sub ${ApplicationName}-${EnvironmentName}
-
-    LoadBalancerListener:
-        Type: AWS::ElasticLoadBalancingV2::Listener
-        Properties:
-            LoadBalancerArn: !Ref LoadBalancer
-            Port: 80
-            Protocol: HTTP
-            DefaultActions:
-                - Type: forward
-                  TargetGroupArn: !Ref TargetGroup
-
-    TargetGroup:
-        Type: AWS::ElasticLoadBalancingV2::TargetGroup
-        Properties:
-            Name: !Sub ${ApplicationName}-${EnvironmentName}
-            VpcId: !Ref VPC
-            Port: 8000
-            Protocol: HTTP
-
-    ###########################################
     # CodeDeploy
     ###########################################
 
@@ -248,20 +202,7 @@ Resources:
             Tags:
                 - Key: Name
                   Value: !Sub ${ApplicationName}-${EnvironmentName}-ApplicationServer
-
-    LoadBalancerSecurityGroup:
-        Type: AWS::EC2::SecurityGroup
-        Properties:
-            VpcId: !Ref VPC
-            GroupDescription: Controls who can access the load balancer
-            SecurityGroupIngress:
-                # Allow access from anywhere
-                - CidrIp: 0.0.0.0/0
-                  IpProtocol: -1
-            Tags:
-                - Key: Name
-                  Value: !Sub ${ApplicationName}-${EnvironmentName}-LoadBalancers
-
+                  
     ###########################################
     # IAM
     ###########################################
