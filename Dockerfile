@@ -22,4 +22,4 @@ COPY . .
 RUN dep ensure
 
 RUN go build -o questionnaireApp .
-# CMD ["./questionnaireApp"]
+CMD ["./questionnaireApp"]
