@@ -62,6 +62,13 @@ func getResultsWithMocks(db *gorm.DB) IResults {
 	return results
 }
 
+func TestNewResults(t *testing.T) {
+	_, db := newDB()
+	results := NewResults(db)
+
+	assert.IsType(t, &Results{}, results)
+}
+
 func TestResults_SubmitResults(t *testing.T) {
 	mock, db := newDB()
 	defer assert.NoError(t, mock.ExpectationsWereMet())
@@ -204,11 +211,4 @@ func TestResults_GetResultsPdf(t *testing.T) {
 	if assert.NoError(t, results.GetResultsPdf(c)) {
 		assert.Equal(t, http.StatusNotFound, rec.Code)
 	}
-}
-
-func TestNewResults(t *testing.T) {
-	_, db := newDB()
-	results := NewResults(db)
-
-	assert.IsType(t, &Results{}, results)
 }
