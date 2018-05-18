@@ -99,7 +99,6 @@ func TestResults_ViewResult(t *testing.T) {
 	req := httptest.NewRequest(echo.GET, "/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.Set("testenv", true)
 
 	c.SetPath("/result/:id")
 	c.SetParamNames("id")
