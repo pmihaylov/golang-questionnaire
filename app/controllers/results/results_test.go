@@ -187,3 +187,28 @@ func TestResults_ViewResultsFailure(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, rec.Code)
 	}
 }
+
+func TestResults_GetResultsPdf(t *testing.T) {
+	_, db := newDB()
+	e := echo.New()
+	results := getResultsWithMocks(db)
+
+	req := httptest.NewRequest(echo.GET, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetPath("/pdf/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("")
+
+	if assert.NoError(t, results.GetResultsPdf(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
+	}
+}
+
+func TestNewResults(t *testing.T) {
+	_, db := newDB()
+	results := NewResults(db)
+
+	assert.IsType(t, &Results{}, results)
+}
