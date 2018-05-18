@@ -48,7 +48,7 @@ func Init() {
 	Server.Use(middleware.Logger())
 	Server.Use(middleware.Recover())
 
-	routes.Init(Server)
+	routes.Init(Server, db.DB)
 
 	Server.Logger.Fatal(Server.Start(":8080"))
 }

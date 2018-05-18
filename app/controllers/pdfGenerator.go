@@ -1,44 +1,32 @@
-package results
+package controllers
 
 import (
 	"bytes"
 	"fmt"
-	"golang-questionnaire/app/db"
 	"golang-questionnaire/app/models"
-	"net/http"
+	"os"
 	"path"
 	"time"
 
-	"os"
-
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
-	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/labstack/echo"
 )
 
-var pdfPath = path.Join(".", "pdf")
+var (
+	pdfPath = path.Join(".", "pdf")
+)
 
-func SubmitResults(c echo.Context) error {
-
-	uiid := uuid.New()
-
-	res := &models.Result{
-		ResultId: uiid,
-		Title:    fmt.Sprintf("Title of result %v", uiid),
+type (
+	IPdfGenerator interface {
+		GeneratePdf(context echo.Context, result *models.Result)
+		GetFile(id string) (pdfFilePath string, pdfName string)
 	}
-	if err := c.Bind(res); err != nil {
-		return err
-	}
+	PdfGenerator struct{}
+)
 
-	storeResults(c, res)
-
-	return c.JSON(http.StatusCreated, res)
-
-}
-
-func storeResults(c echo.Context, res *models.Result) error {
-	db.DB.Create(res)
+func (gen *PdfGenerator) GeneratePdf(c echo.Context, res *models.Result) {
+	start := time.Now()
 
 	id := res.ResultId
 
@@ -46,26 +34,17 @@ func storeResults(c echo.Context, res *models.Result) error {
 		os.Mkdir(pdfPath, 755)
 	}
 
-	pdfFilePath, _ := getFilePath(id.String())
+	pdfFilePath, _ := gen.getFilePath(id.String())
 
 	if _, err := os.Stat(pdfFilePath); os.IsNotExist(err) {
-		go generatePdf(c, res, pdfFilePath)
+		go gen.generateWkhtmlPdf(c, res, pdfFilePath)
 	}
-
-	return nil
-}
-
-func generatePdf(c echo.Context, res *models.Result, pdfFilePath string) {
-	start := time.Now()
-
-	// generateFpdf(c, res, pdfFilePath)
-	generateWkhtmlPdf(c, res, pdfFilePath)
 
 	elapsed := time.Since(start)
 	c.Echo().Logger.Printf("PDF generation took %s", elapsed)
 }
 
-func generateFpdf(c echo.Context, res *models.Result, pdfFilePath string) {
+func (gen *PdfGenerator) generateFpdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	id := res.ResultId.String()
 
 	buf := new(bytes.Buffer)
@@ -88,7 +67,7 @@ func generateFpdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	}
 }
 
-func generateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) {
+func (gen *PdfGenerator) generateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	log := c.Echo().Logger
 	id := res.ResultId.String()
 
@@ -120,40 +99,13 @@ func generateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) {
 	}
 }
 
-func getResults(uiid string, c echo.Context) (res models.Result, err error) {
-	id, err := uuid.Parse(uiid)
-
-	if err != nil {
-		c.Logger().Printf("Wrong result id %v", uiid)
-	}
-
-	db.DB.First(&res, "result_id = ?", id)
+func (gen *PdfGenerator) getFilePath(id string) (pdfFilePath string, pdfName string) {
+	pdfName = fmt.Sprintf("results-%s.pdf", id)
+	pdfFilePath = path.Join(pdfPath, pdfName)
 	return
 }
 
-func ViewResult(c echo.Context) error {
-	id := c.Param("id")
-
-	res, err := getResults(id, c)
-	if err != nil {
-		c.Logger().Errorf("Error getting the result %v", id)
-	}
-
-	return c.Render(http.StatusOK, "results", &res)
-}
-
-func GetResultsPdf(c echo.Context) error {
-	id := c.Param("id")
-	pdfFilePath, pdfName := getFilePath(id)
-
-	if _, err := os.Stat(pdfFilePath); os.IsNotExist(err) {
-		return c.JSON(http.StatusNotFound, err)
-	}
-
-	return c.Attachment(pdfFilePath, pdfName)
-}
-
-func getFilePath(id string) (pdfFilePath string, pdfName string) {
+func (gen *PdfGenerator) GetFile(id string) (pdfFilePath string, pdfName string) {
 	pdfName = fmt.Sprintf("results-%s.pdf", id)
 	pdfFilePath = path.Join(pdfPath, pdfName)
 	return
