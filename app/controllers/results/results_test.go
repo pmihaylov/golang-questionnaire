@@ -1,11 +1,13 @@
-package controllers
+package results
 
 import (
+	"database/sql"
 	"encoding/json"
 	"golang-questionnaire/app/models"
 	"html/template"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"path"
@@ -25,8 +27,8 @@ var (
 
 type MockPdfGenerator struct{}
 
-func (gen *MockPdfGenerator) GeneratePdf(c echo.Context, res *models.Result)         {}
-func (gen *MockPdfGenerator) GetFile(id string) (pdfFilePath string, pdfName string) { return }
+func (gen *MockPdfGenerator) GeneratePdf(c echo.Context, res *models.Result)             {}
+func (gen *MockPdfGenerator) GetFileInfo(id string) (pdfFilePath string, pdfName string) { return }
 
 type Template struct {
 	templates *template.Template
@@ -51,6 +53,15 @@ func newDB() (sqlmock.Sqlmock, *gorm.DB) {
 	return mock, gormDB.Set("gorm:update_column", true)
 }
 
+func getResultsWithMocks(db *gorm.DB) IResults {
+	results := &Results{
+		db:     db,
+		pdfGen: &MockPdfGenerator{},
+	}
+
+	return results
+}
+
 func TestResults_SubmitResults(t *testing.T) {
 	mock, db := newDB()
 	defer assert.NoError(t, mock.ExpectationsWereMet())
@@ -62,10 +73,7 @@ func TestResults_SubmitResults(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	h := &Results{
-		DB:     db,
-		PdfGen: &MockPdfGenerator{},
-	}
+	results := getResultsWithMocks(db)
 
 	rows := sqlmock.NewRows([]string{"id"}).
 		AddRow("1")
@@ -77,12 +85,40 @@ func TestResults_SubmitResults(t *testing.T) {
 	mock.ExpectCommit()
 
 	// Assertions
-	if assert.NoError(t, h.SubmitResults(c)) {
+	if assert.NoError(t, results.SubmitResults(c)) {
 		assert.Equal(t, http.StatusCreated, rec.Code)
 	}
 }
 
-func TestResults_ViewResult(t *testing.T) {
+func TestResults_SubmitResultsError(t *testing.T) {
+	mock, db := newDB()
+	defer assert.NoError(t, mock.ExpectationsWereMet())
+	e := echo.New()
+
+	req := httptest.NewRequest(echo.POST, "/submit", strings.NewReader("malformed"))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	results := getResultsWithMocks(db)
+
+	rows := sqlmock.NewRows([]string{"id"}).
+		AddRow("1")
+
+	mock.ExpectBegin()
+	mock.ExpectQuery("INSERT INTO \"results\" (.+)").
+		WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg()).
+		WillReturnRows(rows)
+	mock.ExpectCommit()
+
+	// Assertions
+	if assert.NoError(t, results.SubmitResults(c)) {
+		assert.Equal(t, http.StatusBadRequest, rec.Code)
+	}
+}
+
+func TestResults_ViewResults(t *testing.T) {
 	mock, db := newDB()
 	defer assert.NoError(t, mock.ExpectationsWereMet())
 	e := echo.New()
@@ -91,7 +127,7 @@ func TestResults_ViewResult(t *testing.T) {
 	json.Unmarshal([]byte(resultJson), result)
 
 	templateRenderer := &Template{
-		templates: template.Must(template.ParseGlob(path.Join("..", "..", "public", "views", "*.html"))),
+		templates: template.Must(template.ParseGlob(path.Join("..", "..", "..", "public", "views", "*.html"))),
 	}
 
 	e.Renderer = templateRenderer
@@ -104,13 +140,11 @@ func TestResults_ViewResult(t *testing.T) {
 	c.SetParamNames("id")
 	c.SetParamValues(result.ResultId.String())
 
-	h := &Results{
-		DB: db,
-	}
+	results := getResultsWithMocks(db)
 
 	rows := sqlmock.
 		NewRows([]string{"id", "result_id"}).
-		AddRow("2", result.ResultId.String())
+		AddRow(rand.Int(), result.ResultId.String())
 
 	countRows := sqlmock.
 		NewRows([]string{"count"}).
@@ -119,7 +153,37 @@ func TestResults_ViewResult(t *testing.T) {
 	mock.ExpectQuery("SELECT \\* FROM \"results\".*").WillReturnRows(rows)
 	mock.ExpectQuery("SELECT count\\(\\*\\) FROM \"results\".*").WillReturnRows(countRows)
 
-	if assert.NoError(t, h.ViewResults(c)) {
+	if assert.NoError(t, results.ViewResults(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
+	}
+}
+
+func TestResults_ViewResultsFailure(t *testing.T) {
+	mock, db := newDB()
+	defer assert.NoError(t, mock.ExpectationsWereMet())
+	e := echo.New()
+
+	result := &models.Result{}
+	json.Unmarshal([]byte(resultJson), result)
+
+	req := httptest.NewRequest(echo.GET, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetPath("/result/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("")
+
+	results := getResultsWithMocks(db)
+
+	countRows := sqlmock.
+		NewRows([]string{"count"}).
+		AddRow(0)
+
+	mock.ExpectQuery("SELECT \\* FROM \"results\".*").WillReturnError(sql.ErrNoRows)
+	mock.ExpectQuery("SELECT count\\(\\*\\) FROM \"results\".*").WillReturnRows(countRows)
+
+	if assert.NoError(t, results.ViewResults(c)) {
+		assert.Equal(t, http.StatusNotFound, rec.Code)
 	}
 }

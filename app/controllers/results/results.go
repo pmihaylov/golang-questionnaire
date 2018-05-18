@@ -1,7 +1,8 @@
-package controllers
+package results
 
 import (
 	"fmt"
+	"golang-questionnaire/app/controllers/pdfGenerator"
 	"golang-questionnaire/app/models"
 	"net/http"
 	"os"
@@ -17,9 +18,10 @@ type (
 		ViewResults(c echo.Context) error
 		GetResultsPdf(c echo.Context) error
 	}
+
 	Results struct {
-		DB     *gorm.DB
-		PdfGen IPdfGenerator
+		db     *gorm.DB
+		pdfGen pdfGenerator.IPdf
 	}
 )
 
@@ -32,11 +34,11 @@ func (r *Results) SubmitResults(c echo.Context) error {
 		Title:    fmt.Sprintf("Title of result %v", uiid),
 	}
 	if err := c.Bind(res); err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	r.DB.Create(res)
-	r.PdfGen.GeneratePdf(c, res)
+	r.db.Create(res)
+	r.pdfGen.GeneratePdf(c, res)
 
 	return c.JSON(http.StatusCreated, res)
 
@@ -47,9 +49,10 @@ func (r *Results) ViewResults(c echo.Context) error {
 	res := &models.Result{}
 	var count int
 
-	r.DB.First(&res, "result_id = ?", uiid).Count(&count)
+	r.db.First(&res, "result_id = ?", uiid).Count(&count)
 	if count == 0 {
 		c.Logger().Errorf("No results with id %v", uiid)
+		return c.JSON(http.StatusNotFound, `{"not found":true}`)
 	}
 
 	return c.Render(http.StatusOK, "results", &res)
@@ -57,7 +60,7 @@ func (r *Results) ViewResults(c echo.Context) error {
 
 func (r *Results) GetResultsPdf(c echo.Context) error {
 	id := c.Param("id")
-	pdfFilePath, pdfName := r.PdfGen.GetFile(id)
+	pdfFilePath, pdfName := r.pdfGen.GetFileInfo(id)
 
 	if _, err := os.Stat(pdfFilePath); os.IsNotExist(err) {
 		return c.JSON(http.StatusNotFound, err)
@@ -65,3 +68,22 @@ func (r *Results) GetResultsPdf(c echo.Context) error {
 
 	return c.Attachment(pdfFilePath, pdfName)
 }
+
+func NewResults(db *gorm.DB) IResults {
+	results := &Results{
+		db,
+		pdfGenerator.NewPdf(),
+	}
+
+	return results
+}
+
+/*var instance IResults
+var once *sync.Once
+
+func GetResultsInstance(db *gorm.DB) IResults {
+	once.Do(func() {
+		instance = NewResults(db)
+	})
+	return instance
+}*/
