@@ -27,8 +27,11 @@ var (
 
 type MockPdfGenerator struct{}
 
-func (gen *MockPdfGenerator) GeneratePdf(c echo.Context, res *models.Result)             {}
+func (gen *MockPdfGenerator) GeneratePdf(c echo.Context, res *models.Result) error       { return nil }
 func (gen *MockPdfGenerator) GetFileInfo(id string) (pdfFilePath string, pdfName string) { return }
+func (gen *MockPdfGenerator) GenerateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) error {
+	return nil
+}
 
 type Template struct {
 	templates *template.Template
