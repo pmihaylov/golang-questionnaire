@@ -64,12 +64,6 @@
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
-  name = "github.com/jung-kurt/gofpdf"
-  packages = ["."]
-  revision = "14c1db30737a138f8d9797cffea58783892b2fae"
-  version = "v1.0.0"
-
-[[projects]]
   name = "github.com/labstack/echo"
   packages = [
     ".",
@@ -102,8 +96,8 @@
 [[projects]]
   name = "github.com/magiconair/properties"
   packages = ["."]
-  revision = "c3beff4c2358b44d0493c7dda585e7db7ff28ae6"
-  version = "v1.7.6"
+  revision = "c2353362d570a7bfa228149c62842019201cfb71"
+  version = "v1.8.0"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -229,6 +223,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f2334b0005ae4cdd5bd7fbe49c8e74b36b7306f53eae2c5008e2a9622328a499"
+  inputs-digest = "c3dadb5d4d0c1be80bd2694ebf4c50db35dcf63ce35817417861353956182d9a"
   solver-name = "gps-cdcl"
   solver-version = 1

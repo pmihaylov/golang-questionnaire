@@ -1,25 +1,41 @@
-FROM golang:1.10-stretch
+FROM golang:1.10-stretch AS build
 
 ENV GOBIN /go/bin
 ENV WKHTMLTOPDF_PATH /opt/wkhtmltox/bin
 
-RUN mkdir -p /go/src/golang-questionnaire
-RUN mkdir -p /opt/wkhtmltox
+ARG wkhtmltox_version=0.12.4
+ARG wkhtmltox_dir=/opt/wkhtmltox
+ARG project_dir=/go/src/golang-questionnaire
 
-RUN apt-get update
-RUN apt-get install -y xz-utils libxrender1 libfontconfig1 libxext6
-RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+### Create directories
+RUN mkdir -p ${wkhtmltox_dir} ${project_dir}
 
-WORKDIR /opt
+### Stuff for wkhtml and unpacking .tar.xz
+WORKDIR ${wkhtmltox_dir}
 
-RUN wget -O wkhtmltox.tar.xz https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-RUN tar -xf wkhtmltox.tar.xz
+RUN apt-get update && \
+    apt-get install -y \
+    apt-transport-https \
+    curl \
+    libfontconfig1 \
+    libxext6 \
+    libxrender1 \
+    xz-utils
 
-WORKDIR /go/src/golang-questionnaire
+### Get wkhtltopdf, golang-migrate/migrate for postgres and golang/dep
+RUN curl -LsS https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${wkhtmltox_version}/wkhtmltox-${wkhtmltox_version}_linux-generic-amd64.tar.xz \
+    | tar xJ --strip-components=1 && \
+    go get -u -d github.com/golang-migrate/migrate/cli github.com/lib/pq && \
+    go build -tags 'postgres' -o /usr/local/bin/migrate github.com/golang-migrate/migrate/cli && \
+    curl -sS https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
-COPY . .
 
-RUN dep ensure
+### Install dependencies
+COPY Gopkg.lock Gopkg.toml ${project_dir}/
+WORKDIR ${project_dir}
+RUN dep ensure -vendor-only
 
+### Copy and build app itself
+COPY . ${project_dir}
 RUN go build -o questionnaireApp .
 CMD ["./questionnaireApp"]
