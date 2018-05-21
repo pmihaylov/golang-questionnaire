@@ -20,10 +20,6 @@ var (
 )
 
 type (
-	IPdfGenerator interface {
-		Args() []string
-		//AddPage(p *wkhtmltopdf.PageReader)
-	}
 	IPdf interface {
 		GeneratePdf(context echo.Context, result *models.Result) error
 		GetFileInfo(id string) (pdfFilePath string, pdfName string)
