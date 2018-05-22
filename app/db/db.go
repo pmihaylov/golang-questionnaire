@@ -24,8 +24,12 @@ func Init(server *echo.Echo) {
 
 	// Migrate the schema
 	DB.AutoMigrate(
-		&models.Result{},
-		&models.Question{},
+		// &models.Result{},
+		new(models.Library),
+		new(models.QuestionType),
+		new(models.Identification),
+		new(models.Question),
+		new(models.Questionnaire),
 	)
 }
 

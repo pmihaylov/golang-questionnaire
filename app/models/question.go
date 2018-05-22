@@ -1,12 +1,13 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )
 
 type Question struct {
 	gorm.Model
-	QuestionId uuid.UUID     `json:"questionId"`
-	Answers    []interface{} `json:"answers" gorm:"type:text[]"`
+	LibraryId      int    `json:"libraryId" gorm:"NOT NULL"`
+	Required       bool   `json:"required"`
+	Text           string `json:"title" gorm:"Type:TEXT"`
+	QuestionTypeId int    `json:"questionTypeId" gorm:"NOT NULL"`
 }
