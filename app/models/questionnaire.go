@@ -1,14 +1,13 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"github.com/lib/pq"
 )
 
 type Questionnaire struct {
-	gorm.Model
-	LibraryId           int    `json:"libraryId" gorm:"NOT NULL"`
-	IdentificationId    string `json:"identificationId" gorm:"NOT NULL"`
-	IdentificationValue string `json:"identificationValue"`
-	Name                string
-	EntryNodeId         int
+	BaseModel
+	LibraryId        int `gorm:"NOT NULL"`
+	IdentificationId int `gorm:"NOT NULL"`
+	Name             string
+	EntryNodeId      pq.Int64Array `gorm:"Type:integer[]"`
 }

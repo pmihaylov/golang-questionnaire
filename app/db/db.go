@@ -1,42 +1,22 @@
 package db
 
 import (
+	"fmt"
+	"golang-questionnaire/app/models"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-
-	"fmt"
-	"github.com/labstack/echo"
 	"github.com/spf13/viper"
-	"golang-questionnaire/app/models"
+
+	"github.com/labstack/echo"
 )
 
-var DB *gorm.DB
+var DB = new(gorm.DB)
 
-func Init(server *echo.Echo) {
-	connectionString := getConnectionString()
-
-	var err error
-	DB, err = gorm.Open("postgres", connectionString)
-
-	if err != nil {
-		server.Logger.Fatalf("failed to connect database: %v", err)
-	}
-
-	// Migrate the schema
-	DB.AutoMigrate(
-		// &models.Result{},
-		new(models.Library),
-		new(models.QuestionType),
-		new(models.Identification),
-		new(models.Question),
-		new(models.Questionnaire),
-	)
-}
-
-func getConnectionString() (connectionString string) {
+func getConnectionString() string {
 	dbConf := viper.GetStringMapString("db.postgresIreland")
 
-	connectionString = fmt.Sprintf(
+	connectionString := fmt.Sprintf(
 		"host=%s port=%s dbname=%s user=%s password=%s",
 		dbConf["host"],
 		dbConf["port"],
@@ -45,5 +25,32 @@ func getConnectionString() (connectionString string) {
 		dbConf["password"],
 	)
 
-	return
+	return connectionString
+}
+
+func runAutoMigrations(db *gorm.DB) {
+	// Migrate the schema
+	db.AutoMigrate(
+		new(models.Answer),
+		new(models.Identification),
+		new(models.Library),
+		new(models.Questionnaire),
+		new(models.QuestionnaireNode),
+		new(models.Question),
+		new(models.QuestionType),
+	)
+}
+
+func Init(server *echo.Echo) {
+	connectionString := getConnectionString()
+
+	db, err := gorm.Open("postgres", connectionString)
+
+	if err != nil {
+		server.Logger.Fatalf("failed to connect database: %v", err)
+	}
+
+	runAutoMigrations(db)
+
+	DB = db
 }

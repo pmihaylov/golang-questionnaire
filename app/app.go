@@ -35,6 +35,10 @@ func readConfig() {
 }
 
 func Init() {
+	readConfig()
+
+	Server = echo.New()
+
 	db.Init(Server)
 	defer db.DB.Close()
 
@@ -51,9 +55,4 @@ func Init() {
 	routes.Init(Server, db.DB)
 
 	Server.Logger.Fatal(Server.Start(":8080"))
-}
-
-func init() {
-	Server = echo.New()
-	readConfig()
 }
