@@ -21,37 +21,35 @@ type (
 
 func (controller *QuestionnaireNodeController) Create(c echo.Context) error {
 
-	items := new(models.QuestionnaireNode)
-	if err := c.Bind(items); err != nil {
+	item := new(models.QuestionnaireNode)
+	if err := c.Bind(item); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	controller.DB.Create(items)
+	if err := controller.DB.Create(item).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
 	return c.NoContent(http.StatusCreated)
 }
 
 func (controller *QuestionnaireNodeController) Read(c echo.Context) error {
 	id := c.Param("id")
-	items := new(models.QuestionnaireNode)
+	item := new(models.QuestionnaireNode)
 
-	controller.DB.First(&items, "id = ?", id)
-
-	if items.ID == 0 {
+	if controller.DB.First(&item, "id = ?", id).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
 
-	return c.JSONPretty(http.StatusOK, &items, " ")
+	return c.JSONPretty(http.StatusOK, &item, " ")
 }
 
 func (controller *QuestionnaireNodeController) List(c echo.Context) error {
 	items := new([]models.QuestionnaireNode)
 
-	if len(*items) == 0 {
+	if controller.DB.Find(&items).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
-
-	controller.DB.Find(&items)
 
 	return c.JSON(http.StatusOK, &items)
 }

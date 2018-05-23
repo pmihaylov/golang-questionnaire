@@ -34,25 +34,30 @@ func readConfig() {
 	}
 }
 
-func Init() {
-	readConfig()
-
-	Server = echo.New()
-
-	db.Init(Server)
-	defer db.DB.Close()
-
+func getRenderer() *Template {
 	templateRenderer := &Template{
-		templates: template.Must(template.ParseGlob(path.Join("public", "views", "*.html"))),
+		templates: template.Must(template.ParseGlob(path.Join("app", "views", "*.html"))),
 	}
 
-	Server.Renderer = templateRenderer
+	return templateRenderer
+}
+
+func Init() {
+	db := db.Init(Server)
+	defer db.Close()
+
+	Server.Renderer = getRenderer()
 
 	// Middleware
 	Server.Use(middleware.Logger())
 	Server.Use(middleware.Recover())
 
-	routes.Init(Server, db.DB)
+	routes.Init(Server, db)
 
 	Server.Logger.Fatal(Server.Start(":8080"))
+}
+
+func init() {
+	Server = echo.New()
+	readConfig()
 }

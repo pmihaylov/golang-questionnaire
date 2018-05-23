@@ -1,13 +1,14 @@
 package models
 
-import (
-	"github.com/lib/pq"
-)
-
 type Questionnaire struct {
 	BaseModel
-	LibraryId        int `gorm:"NOT NULL"`
-	IdentificationId int `gorm:"NOT NULL"`
-	Name             string
-	EntryNodeId      pq.Int64Array `gorm:"Type:integer[]"`
+	IdentificationID   int `gorm:"NOT NULL"`
+	Name               string
+	EntryNodeID        int
+	LibraryID          int `gorm:"NOT NULL"`
+
+	Library            Library
+	// Libraries          []*Library `gorm:"many2many:library_questionnaires"'`
+	QuestionnaireNodes []QuestionnaireNode
+	// !!! Example !!! EntryNodeID      pq.Int64Array `gorm:"Type:integer[]"`
 }

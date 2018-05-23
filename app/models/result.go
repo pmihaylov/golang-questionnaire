@@ -8,5 +8,4 @@ type Result struct {
 	BaseModel
 	ResultId  uuid.UUID  `json:"resultId"`
 	Title     string     `json:"title"`
-	Questions []Question `json:"questions"`
 }

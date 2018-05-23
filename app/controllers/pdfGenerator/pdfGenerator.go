@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang-questionnaire/app/models"
 	"log"
+	"net/http"
 	"os"
 	"path"
 	"time"
@@ -16,7 +17,7 @@ import (
 )
 
 var (
-	pdfPath = path.Join(".", "pdf")
+	pdfPath = path.Join("public", "pdf")
 )
 
 type (
@@ -24,6 +25,7 @@ type (
 		GeneratePdf(context echo.Context, result *models.Result) error
 		GetFileInfo(id string) (pdfFilePath string, pdfName string)
 		GenerateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) error
+		HtmlToPdf(c echo.Context, buffer *bytes.Buffer, pdfFilePath string) error
 	}
 	Pdf struct {
 		generator *wkhtmltopdf.PDFGenerator
@@ -97,8 +99,34 @@ func (gen *Pdf) GenerateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePat
 	return nil
 }
 
-func (gen *Pdf) GetFileInfo(id string) (pdfFilePath string, pdfName string) {
-	pdfName = fmt.Sprintf("results-%s.pdf", id)
+func (gen *Pdf) HtmlToPdf(c echo.Context, buffer *bytes.Buffer, pdfFilePath string) error {
+	// start := time.Now()
+
+	if _, err := os.Stat(pdfPath); os.IsNotExist(err) {
+		os.Mkdir(pdfPath, 777)
+	}
+
+	gen.generator.AddPage(wkhtmltopdf.NewPageReader(buffer))
+	err := gen.generator.Create()
+	if err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	// Write buffer contents to file on disk
+	err = gen.generator.WriteFile(pdfFilePath)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	// elapsed := time.Since(start)
+	// log.Printf("PDF generation took %s", elapsed)
+
+	return nil
+}
+
+func (gen *Pdf) GetFileInfo(name string) (pdfFilePath string, pdfName string) {
+	pdfName = fmt.Sprintf("%s.pdf", name)
 	pdfFilePath = path.Join(pdfPath, pdfName)
 	return
 }

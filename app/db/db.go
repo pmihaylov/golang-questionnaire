@@ -11,8 +11,6 @@ import (
 	"github.com/labstack/echo"
 )
 
-var DB = new(gorm.DB)
-
 func getConnectionString() string {
 	dbConf := viper.GetStringMapString("db.postgresIreland")
 
@@ -31,20 +29,36 @@ func getConnectionString() string {
 func runAutoMigrations(db *gorm.DB) {
 	// Migrate the schema
 	db.AutoMigrate(
-		new(models.Answer),
-		new(models.Identification),
-		new(models.Library),
-		new(models.Questionnaire),
-		new(models.QuestionnaireNode),
-		new(models.Question),
-		new(models.QuestionType),
+		&models.Answer{},
+		&models.Identification{},
+		&models.Library{},
+		&models.Questionnaire{},
+		&models.QuestionnaireNode{},
+		&models.Question{},
+		&models.QuestionType{},
 	)
+
+	db.Model(&models.Answer{}).AddForeignKey("question_id", "questions(id)", "NO ACTION", "NO ACTION")
+
+	db.Model(&models.Question{}).AddForeignKey("library_id", "libraries(id)", "NO ACTION", "NO ACTION")
+	db.Model(&models.Question{}).AddForeignKey("question_type_id", "question_types(id)", "NO ACTION", "NO ACTION")
+
+	db.Model(&models.Questionnaire{}).AddForeignKey("library_id", "libraries(id)", "NO ACTION", "NO ACTION")
+	db.Model(&models.Questionnaire{}).AddForeignKey("identification_id", "identifications(id)", "NO ACTION", "NO ACTION")
+	// db.Model(&models.Questionnaire{}).AddForeignKey("entry_node_id", "questionnaire_nodes(id)", "NO ACTION", "NO ACTION")
+
+	db.Model(&models.QuestionnaireNode{}).AddForeignKey("questionnaire_id", "questionnaires(id)", "NO ACTION", "NO ACTION")
+	// db.Model(&models.QuestionnaireNode{}).AddForeignKey("parent_node_id", "questionnaire_nodes(id)", "NO ACTION", "NO ACTION")
+	db.Model(&models.QuestionnaireNode{}).AddForeignKey("answer_id", "answers(id)", "NO ACTION", "NO ACTION")
 }
 
-func Init(server *echo.Echo) {
+func Init(server *echo.Echo) *gorm.DB {
+
 	connectionString := getConnectionString()
 
 	db, err := gorm.Open("postgres", connectionString)
+
+	// db.LogMode(true)
 
 	if err != nil {
 		server.Logger.Fatalf("failed to connect database: %v", err)
@@ -52,5 +66,5 @@ func Init(server *echo.Echo) {
 
 	runAutoMigrations(db)
 
-	DB = db
+	return db
 }

@@ -1,6 +1,6 @@
 vendor/*
 .idea/*
-pdf/*
+public/pdf/*
 codedeploy/*
 cloudformation/*
 stageconfig/*

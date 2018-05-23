@@ -26,7 +26,9 @@ func (controller *QuestionController) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	controller.DB.Create(item)
+	if err := controller.DB.Create(item).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
 	return c.NoContent(http.StatusCreated)
 }
@@ -34,10 +36,15 @@ func (controller *QuestionController) Create(c echo.Context) error {
 func (controller *QuestionController) Read(c echo.Context) error {
 	id := c.Param("id")
 	item := new(models.Question)
+	// library := new(models.Library)
+	//answers := new([]models.Answer)
 
-	controller.DB.First(&item, "id = ?", id)
-
-	if item.ID == 0 {
+	if controller.DB.
+		Preload("Library").
+		Preload("Answers").
+		Preload("QuestionType").
+		First(&item, "id = ?", id).
+		RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
 
@@ -47,11 +54,9 @@ func (controller *QuestionController) Read(c echo.Context) error {
 func (controller *QuestionController) List(c echo.Context) error {
 	items := new([]models.Question)
 
-	if len(*items) == 0 {
+	if controller.DB.Find(&items).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
-
-	controller.DB.Find(&items)
 
 	return c.JSON(http.StatusOK, &items)
 }

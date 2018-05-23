@@ -36,7 +36,7 @@ tags
 .vscode
 
 ### Project Template
-pdf
+public/pdf
 questionnaireApp
 app/config
 golang-questionnaire/

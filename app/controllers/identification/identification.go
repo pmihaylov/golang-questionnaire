@@ -26,7 +26,9 @@ func (controller *IdentificationController) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	controller.DB.Create(item)
+	if err := controller.DB.Create(item).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
 	return c.NoContent(http.StatusCreated)
 }
@@ -47,9 +49,7 @@ func (controller *IdentificationController) Read(c echo.Context) error {
 func (controller *IdentificationController) List(c echo.Context) error {
 	items := new([]models.Identification)
 
-	controller.DB.Find(&items)
-
-	if len(*items) == 0 {
+	if controller.DB.Find(&items).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
 

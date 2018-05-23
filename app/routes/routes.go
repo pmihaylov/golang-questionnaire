@@ -8,6 +8,7 @@ import (
 	"golang-questionnaire/app/controllers/questionType"
 	"golang-questionnaire/app/controllers/questionnaire"
 	"golang-questionnaire/app/controllers/questionnaireNode"
+	"golang-questionnaire/app/controllers/results"
 	"net/http"
 
 	"github.com/jinzhu/gorm"
@@ -54,9 +55,18 @@ func Init(server *echo.Echo, db *gorm.DB) {
 	server.POST("/questionnaire", questionnaireController.Create)
 	server.GET("/questionnaire", questionnaireController.List)
 	server.GET("/questionnaire/:id", questionnaireController.Read)
+	server.GET("/questionnaire/:id/view", questionnaireController.View)
+	server.GET("/questionnaire/:id/pdf", questionnaireController.Pdf)
 
 	// QuestionnaireNode
 	server.POST("/node", questionnaireNodeController.Create)
 	server.GET("/node", questionnaireNodeController.List)
 	server.GET("/node/:id", questionnaireNodeController.Read)
+
+	results := results.NewResults(db)
+
+	// Results strictly for testing purpose
+	server.POST("/result", results.SubmitResults)
+	server.GET("/result/:id", results.ViewResults)
+	server.GET("/result/:id/pdf", results.GetResultsPdf)
 }

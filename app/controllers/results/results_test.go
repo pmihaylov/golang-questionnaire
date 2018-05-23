@@ -1,6 +1,7 @@
 package results
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
 	"golang-questionnaire/app/models"
@@ -30,6 +31,9 @@ type MockPdfGenerator struct{}
 func (gen *MockPdfGenerator) GeneratePdf(c echo.Context, res *models.Result) error       { return nil }
 func (gen *MockPdfGenerator) GetFileInfo(id string) (pdfFilePath string, pdfName string) { return }
 func (gen *MockPdfGenerator) GenerateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) error {
+	return nil
+}
+func (gen *MockPdfGenerator) HtmlToPdf(c echo.Context, buffer *bytes.Buffer, pdfFilePath string) error {
 	return nil
 }
 
@@ -77,7 +81,7 @@ func TestResults_SubmitResults(t *testing.T) {
 	defer assert.NoError(t, mock.ExpectationsWereMet())
 	e := echo.New()
 
-	req := httptest.NewRequest(echo.POST, "/submit", strings.NewReader(submitJson))
+	req := httptest.NewRequest(echo.POST, "/result", strings.NewReader(submitJson))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
 	rec := httptest.NewRecorder()
@@ -105,7 +109,7 @@ func TestResults_SubmitResultsError(t *testing.T) {
 	defer assert.NoError(t, mock.ExpectationsWereMet())
 	e := echo.New()
 
-	req := httptest.NewRequest(echo.POST, "/submit", strings.NewReader("malformed"))
+	req := httptest.NewRequest(echo.POST, "/result", strings.NewReader("malformed"))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
 	rec := httptest.NewRecorder()
@@ -137,7 +141,7 @@ func TestResults_ViewResults(t *testing.T) {
 	json.Unmarshal([]byte(resultJson), result)
 
 	templateRenderer := &Template{
-		templates: template.Must(template.ParseGlob(path.Join("..", "..", "..", "public", "views", "*.html"))),
+		templates: template.Must(template.ParseGlob(path.Join("..", "..", "views", "*.html"))),
 	}
 
 	e.Renderer = templateRenderer
@@ -207,7 +211,7 @@ func TestResults_GetResultsPdf(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	c.SetPath("/pdf/:id")
+	c.SetPath("/result/:id/pdf")
 	c.SetParamNames("id")
 	c.SetParamValues("")
 

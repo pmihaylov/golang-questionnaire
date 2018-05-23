@@ -79,14 +79,18 @@ CREATE TABLE Validation (
 
 
 ALTER TABLE Answer ADD CONSTRAINT fk_answer_question FOREIGN KEY (questionId) REFERENCES Question (id);
+
 ALTER TABLE Question ADD CONSTRAINT fk_question_library FOREIGN KEY (libraryId) REFERENCES Library (id);
 ALTER TABLE Question ADD CONSTRAINT fk_question_questiontype FOREIGN KEY (questionTypeId) REFERENCES QuestionType (id);
+
 ALTER TABLE Questionnaire ADD CONSTRAINT fk_questionnaire_identification FOREIGN KEY (identificationId) REFERENCES Identification (id);
 ALTER TABLE Questionnaire ADD CONSTRAINT fk_questionnaire_library FOREIGN KEY (libraryId) REFERENCES Library (id);
 ALTER TABLE Questionnaire ADD CONSTRAINT fk_questionnaire_questionnairenode FOREIGN KEY (entryNodeId) REFERENCES QuestionnaireNode (id);
+
 ALTER TABLE QuestionnaireNode ADD CONSTRAINT fk_questionnairenode_answer FOREIGN KEY (answerId) REFERENCES Answer (id);
 ALTER TABLE QuestionnaireNode ADD CONSTRAINT fk_questionnairenode_questionnaire FOREIGN KEY (questionnaireId) REFERENCES Questionnaire (id);
 ALTER TABLE QuestionnaireNode ADD CONSTRAINT fk_questionnairenode_questionnairenode FOREIGN KEY (parentNodeId) REFERENCES QuestionnaireNode (id);
+
 ALTER TABLE QuestionTypeValidation ADD CONSTRAINT fk_questiontypevalidation_questiontype FOREIGN KEY (questionTypeId) REFERENCES QuestionType (id);
 ALTER TABLE QuestionTypeValidation ADD CONSTRAINT fk_questiontypevalidation_validation FOREIGN KEY (validationId) REFERENCES Validation (id);
 ALTER TABLE QuestionValidation ADD CONSTRAINT fk_questionvalidation_question FOREIGN KEY (questionId) REFERENCES Question (id);

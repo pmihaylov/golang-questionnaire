@@ -2,7 +2,7 @@ package models
 
 type QuestionnaireNode struct {
 	BaseModel
-	ParentNodeId    int `gorm:"NOT NULL"`
-	QuestionnaireId int `gorm:"NOT NULL"`
-	AnswerId        int
+	ParentNodeID    int `gorm:"NOT NULL"`
+	QuestionnaireID int `gorm:"NOT NULL"`
+	AnswerID        int
 }

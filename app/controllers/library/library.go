@@ -25,30 +25,28 @@ func (controller *LibraryController) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	controller.DB.Create(item)
+	if err := controller.DB.Create(item).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
 	return c.NoContent(http.StatusCreated)
 }
 
 func (controller *LibraryController) Read(c echo.Context) error {
 	id := c.Param("id")
-	items := new(models.Library)
+	item := new(models.Library)
 
-	controller.DB.First(&items, "id = ?", id)
-
-	if items.ID == 0 {
+	if controller.DB.First(&item, "id = ?", id).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
 
-	return c.JSONPretty(http.StatusOK, &items, " ")
+	return c.JSONPretty(http.StatusOK, &item, " ")
 }
 
 func (controller *LibraryController) List(c echo.Context) error {
 	items := new([]models.Library)
 
-	controller.DB.Find(&items)
-
-	if len(*items) == 0 {
+	if controller.DB.Find(&items).RecordNotFound() {
 		return controllers.HttpNotFound(c)
 	}
 
