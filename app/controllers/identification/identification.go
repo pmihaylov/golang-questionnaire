@@ -1,8 +1,8 @@
 package identification
 
 import (
-	"golang-questionnaire/app/controllers"
 	"golang-questionnaire/app/controllers/base"
+	"golang-questionnaire/app/helpers"
 	"golang-questionnaire/app/models"
 	"net/http"
 
@@ -40,7 +40,7 @@ func (controller *IdentificationController) Read(c echo.Context) error {
 	controller.DB.First(&item, "id = ?", id)
 
 	if item.ID == 0 {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSONPretty(http.StatusOK, &item, " ")
@@ -50,7 +50,7 @@ func (controller *IdentificationController) List(c echo.Context) error {
 	items := new([]models.Identification)
 
 	if controller.DB.Find(&items).RecordNotFound() {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSON(http.StatusOK, &items)

@@ -1,4 +1,4 @@
-package pdfGenerator
+package pdf
 
 import (
 	"encoding/json"
@@ -31,7 +31,7 @@ func getContext(id string) echo.Context {
 	e := echo.New()
 
 	templateRenderer := &Template{
-		templates: template.Must(template.ParseGlob(path.Join("..", "..", "..", "public", "views", "*.html"))),
+		templates: template.Must(template.ParseGlob(path.Join("..", "..", "views", "*.html"))),
 	}
 
 	e.Renderer = templateRenderer
@@ -48,7 +48,7 @@ func getContext(id string) echo.Context {
 }
 
 func TestPdf_GeneratePdf(t *testing.T) {
-	pdf := NewPdf()
+	pdf := NewPdfGenerator()
 	assert := assert.New(t)
 
 	result := &models.Result{}
@@ -61,7 +61,7 @@ func TestPdf_GeneratePdf(t *testing.T) {
 }
 
 func TestPdf_GeneratePdfFailure(t *testing.T) {
-	pdf := NewPdf()
+	pdf := NewPdfGenerator()
 	assert := assert.New(t)
 
 	result := &models.Result{}
@@ -74,7 +74,9 @@ func TestPdf_GeneratePdfFailure(t *testing.T) {
 }
 
 func TestPdf_GenerateWkhtmlPdf(t *testing.T) {
-	pdf := NewPdf()
+	pdfPath = path.Join("test_pdfs")
+
+	pdf := NewPdfGenerator()
 	assert := assert.New(t)
 
 	result := &models.Result{}
@@ -92,7 +94,7 @@ func TestPdf_GenerateWkhtmlPdf(t *testing.T) {
 	assert.NotEmpty(pdfName)
 
 	if _, err := os.Stat(pdfPath); os.IsNotExist(err) {
-		os.Mkdir(pdfPath, 755)
+		os.MkdirAll(pdfPath, 755)
 	}
 
 	if assert.NoError(pdf.GenerateWkhtmlPdf(c, result, pdfFilePath)) {

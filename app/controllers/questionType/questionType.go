@@ -1,8 +1,8 @@
 package questionType
 
 import (
-	"golang-questionnaire/app/controllers"
 	"golang-questionnaire/app/controllers/base"
+	"golang-questionnaire/app/helpers"
 	"golang-questionnaire/app/models"
 	"net/http"
 
@@ -38,7 +38,7 @@ func (controller *QuestionTypeController) Read(c echo.Context) error {
 	item := new(models.QuestionType)
 
 	if controller.DB.First(&item, "id = ?", id).RecordNotFound() {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSONPretty(http.StatusOK, &item, " ")
@@ -48,7 +48,7 @@ func (controller *QuestionTypeController) List(c echo.Context) error {
 	items := new([]models.QuestionType)
 
 	if controller.DB.Find(&items).RecordNotFound() {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSON(http.StatusOK, &items)

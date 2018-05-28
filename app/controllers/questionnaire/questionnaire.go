@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"golang-questionnaire/app/controllers"
 	"golang-questionnaire/app/controllers/base"
-	"golang-questionnaire/app/controllers/pdfGenerator"
+	"golang-questionnaire/app/controllers/pdf"
+	"golang-questionnaire/app/helpers"
+
 	"golang-questionnaire/app/models"
 	"net/http"
 	"os"
@@ -23,7 +24,7 @@ type (
 	}
 	QuestionnaireController struct {
 		base.Controller
-		pdfGen pdfGenerator.IPdf
+		pdfGen pdf.IPdfGenerator
 	}
 )
 
@@ -46,6 +47,7 @@ func (controller *QuestionnaireController) getQuestionnaire(id string) (*models.
 	item := new(models.Questionnaire)
 
 	if controller.DB.
+		// Debug().
 		Preload("QuestionnaireNodes").
 		Preload("Library").
 		First(&item, "id = ?", id).RecordNotFound() {
@@ -60,7 +62,7 @@ func (controller *QuestionnaireController) Read(c echo.Context) error {
 
 	item, err := controller.getQuestionnaire(id)
 	if err != nil {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSON(http.StatusOK, item)
@@ -71,7 +73,7 @@ func (controller *QuestionnaireController) View(c echo.Context) error {
 
 	item, err := controller.getQuestionnaire(id)
 	if err != nil {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.Render(http.StatusOK, "questionnaire", item)
@@ -82,7 +84,7 @@ func (controller *QuestionnaireController) Pdf(c echo.Context) error {
 
 	item, err := controller.getQuestionnaire(id)
 	if err != nil {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	pdfFilePath, pdfName := controller.pdfGen.GetFileInfo(fmt.Sprintf("questionnaire-%v", item.ID))
@@ -106,10 +108,9 @@ func (controller *QuestionnaireController) List(c echo.Context) error {
 	items := new([]models.Questionnaire)
 
 	if controller.DB.
-		Preload("QuestionnaireNodes").
-		Preload("Library").
+		// Debug().
 		Find(&items).RecordNotFound() {
-		return controllers.HttpNotFound(c)
+		return helpers.HttpNotFound(c)
 	}
 
 	return c.JSON(http.StatusOK, &items)
@@ -118,7 +119,7 @@ func (controller *QuestionnaireController) List(c echo.Context) error {
 func New(db *gorm.DB) IQuestionnaireController {
 	controller := &QuestionnaireController{
 		base.New(db),
-		pdfGenerator.NewPdf(),
+		pdf.NewPdfGenerator(),
 	}
 
 	return controller

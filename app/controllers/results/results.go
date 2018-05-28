@@ -2,7 +2,7 @@ package results
 
 import (
 	"fmt"
-	"golang-questionnaire/app/controllers/pdfGenerator"
+	"golang-questionnaire/app/controllers/pdf"
 	"golang-questionnaire/app/models"
 	"net/http"
 	"os"
@@ -21,12 +21,11 @@ type (
 
 	Results struct {
 		db     *gorm.DB
-		pdfGen pdfGenerator.IPdf
+		pdfGen pdf.IPdfGenerator
 	}
 )
 
 func (r *Results) SubmitResults(c echo.Context) error {
-
 	uiid := uuid.New()
 
 	res := &models.Result{
@@ -72,18 +71,8 @@ func (r *Results) GetResultsPdf(c echo.Context) error {
 func NewResults(db *gorm.DB) IResults {
 	results := &Results{
 		db,
-		pdfGenerator.NewPdf(),
+		pdf.NewPdfGenerator(),
 	}
 
 	return results
 }
-
-/*var instance IResults
-var once *sync.Once
-
-func GetResultsInstance(db *gorm.DB) IResults {
-	once.Do(func() {
-		instance = NewResults(db)
-	})
-	return instance
-}*/
