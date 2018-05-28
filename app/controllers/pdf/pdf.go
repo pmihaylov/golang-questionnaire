@@ -46,7 +46,7 @@ func NewPdfGenerator() IPdfGenerator {
 
 func (gen *PdfGenerator) GeneratePdf(c echo.Context, res *models.Result) error {
 
-	id := res.ResultId
+	id := res.ResultID
 	if id == uuid.Nil {
 		return errors.New("result: empty id")
 	}
@@ -67,7 +67,7 @@ func (gen *PdfGenerator) GeneratePdf(c echo.Context, res *models.Result) error {
 func (gen *PdfGenerator) GenerateWkhtmlPdf(c echo.Context, res *models.Result, pdfFilePath string) (err error) {
 	start := time.Now()
 
-	id := res.ResultId.String()
+	id := res.ResultID.String()
 
 	buf := new(bytes.Buffer)
 	err = c.Echo().Renderer.Render(buf, "results", res, c)

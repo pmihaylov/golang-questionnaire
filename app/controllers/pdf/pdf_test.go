@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	resultJson = ` { "id": 28, "created_at": "2018-05-15 11:33:30.552288", "updated_at": "2018-05-15 11:33:30.552288", "deleted_at": null, "result_id": "09364436-18f4-4b14-9f4b-dbfa216a1831", "title": "Title of result 09364436-18f4-4b14-9f4b-dbfa216a1831" } `
+	resultJSON = `{ "id": 28, "created_at": "2018-05-15 11:33:30.552288", "updated_at": "2018-05-15 11:33:30.552288", "deleted_at": null, "result_id": "09364436-18f4-4b14-9f4b-dbfa216a1831", "title": "Title of result 09364436-18f4-4b14-9f4b-dbfa216a1831" }`
 )
 
 type Template struct {
@@ -52,10 +52,10 @@ func TestPdf_GeneratePdf(t *testing.T) {
 	assert := assert.New(t)
 
 	result := &models.Result{}
-	json.Unmarshal([]byte(resultJson), result)
-	result.ResultId = uuid.New()
+	json.Unmarshal([]byte(resultJSON), result)
+	result.ResultID = uuid.New()
 
-	c := getContext(result.ResultId.String())
+	c := getContext(result.ResultID.String())
 
 	assert.NoError(pdf.GeneratePdf(c, result))
 }
@@ -65,10 +65,10 @@ func TestPdf_GeneratePdfFailure(t *testing.T) {
 	assert := assert.New(t)
 
 	result := &models.Result{}
-	json.Unmarshal([]byte(resultJson), result)
-	result.ResultId = uuid.Nil
+	json.Unmarshal([]byte(resultJSON), result)
+	result.ResultID = uuid.Nil
 
-	c := getContext(result.ResultId.String())
+	c := getContext(result.ResultID.String())
 
 	assert.Error(pdf.GeneratePdf(c, result))
 }
@@ -80,12 +80,12 @@ func TestPdf_GenerateWkhtmlPdf(t *testing.T) {
 	assert := assert.New(t)
 
 	result := &models.Result{}
-	json.Unmarshal([]byte(resultJson), result)
-	result.ResultId = uuid.New()
+	json.Unmarshal([]byte(resultJSON), result)
+	result.ResultID = uuid.New()
 
-	c := getContext(result.ResultId.String())
+	c := getContext(result.ResultID.String())
 
-	pdfFilePath, pdfName := pdf.GetFileInfo(result.ResultId.String())
+	pdfFilePath, pdfName := pdf.GetFileInfo(result.ResultID.String())
 
 	assert.IsType(*new(string), pdfFilePath)
 	assert.NotEmpty(pdfFilePath)

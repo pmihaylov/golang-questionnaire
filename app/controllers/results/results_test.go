@@ -152,13 +152,13 @@ func TestResults_ViewResults(t *testing.T) {
 
 	c.SetPath("/result/:id")
 	c.SetParamNames("id")
-	c.SetParamValues(result.ResultId.String())
+	c.SetParamValues(result.ResultID.String())
 
 	results := getResultsWithMocks(db)
 
 	rows := sqlmock.
 		NewRows([]string{"id", "result_id"}).
-		AddRow(rand.Int(), result.ResultId.String())
+		AddRow(rand.Int(), result.ResultID.String())
 
 	countRows := sqlmock.
 		NewRows([]string{"count"}).

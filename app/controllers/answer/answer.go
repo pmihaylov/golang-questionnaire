@@ -11,15 +11,15 @@ import (
 )
 
 type (
-	IAnswerController interface {
+	IController interface {
 		base.IController
 	}
-	AnswerController struct {
+	Controller struct {
 		base.Controller
 	}
 )
 
-func (controller *AnswerController) Create(c echo.Context) error {
+func (controller *Controller) Create(c echo.Context) error {
 
 	item := new(models.Answer)
 	if err := c.Bind(item); err != nil {
@@ -33,7 +33,7 @@ func (controller *AnswerController) Create(c echo.Context) error {
 	return c.NoContent(http.StatusCreated)
 }
 
-func (controller *AnswerController) Read(c echo.Context) error {
+func (controller *Controller) Read(c echo.Context) error {
 	id := c.Param("id")
 	item := new(models.Answer)
 
@@ -44,7 +44,7 @@ func (controller *AnswerController) Read(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, &item, " ")
 }
 
-func (controller *AnswerController) List(c echo.Context) error {
+func (controller *Controller) List(c echo.Context) error {
 	items := new([]models.Answer)
 
 	if controller.DB.Find(&items).RecordNotFound() {
@@ -54,8 +54,8 @@ func (controller *AnswerController) List(c echo.Context) error {
 	return c.JSON(http.StatusOK, &items)
 }
 
-func New(db *gorm.DB) IAnswerController {
-	controller := &AnswerController{
+func New(db *gorm.DB) IController {
+	controller := &Controller{
 		base.New(db),
 	}
 

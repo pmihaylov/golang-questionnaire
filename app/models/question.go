@@ -1,5 +1,6 @@
 package models
 
+// Question model
 type Question struct {
 	BaseModel
 	Required       bool
@@ -7,7 +8,7 @@ type Question struct {
 	QuestionTypeID int    `gorm:"NOT NULL"`
 	LibraryID      int    `gorm:"NOT NULL"`
 
-	QuestionType   QuestionType
-	Library        Library
-	Answers        []Answer
+	QuestionType QuestionType
+	Library      Library
+	Answers      []Answer
 }

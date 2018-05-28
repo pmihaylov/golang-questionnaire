@@ -29,7 +29,7 @@ func (r *Results) SubmitResults(c echo.Context) error {
 	uiid := uuid.New()
 
 	res := &models.Result{
-		ResultId: uiid,
+		ResultID: uiid,
 		Title:    fmt.Sprintf("Title of result %v", uiid),
 	}
 	if err := c.Bind(res); err != nil {

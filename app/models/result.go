@@ -6,6 +6,6 @@ import (
 
 type Result struct {
 	BaseModel
-	ResultId  uuid.UUID  `json:"resultId"`
-	Title     string     `json:"title"`
+	ResultID uuid.UUID `json:"resultId"`
+	Title    string    `json:"title"`
 }

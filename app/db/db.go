@@ -5,7 +5,10 @@ import (
 	"golang-questionnaire/app/models"
 
 	"github.com/jinzhu/gorm"
+
+	// Importing PostgreSQL dialect
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+
 	"github.com/spf13/viper"
 
 	"github.com/labstack/echo"
@@ -52,6 +55,7 @@ func runAutoMigrations(db *gorm.DB) {
 	db.Model(&models.QuestionnaireNode{}).AddForeignKey("answer_id", "answers(id)", "NO ACTION", "NO ACTION")
 }
 
+// Init database
 func Init(server *echo.Echo) *gorm.DB {
 
 	connectionString := getConnectionString()
